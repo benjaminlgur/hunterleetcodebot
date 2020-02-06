@@ -8,7 +8,8 @@ from datetime import datetime
 
 #TOKEN = open("leetcodebottoken.txt", "rt")
 TOKEN = "TOKEN HERE"
-
+#Changes time between saves in seconds
+SAVEINTERVAL = 5
 
 bot = commands.Bot(command_prefix='.')
 
@@ -31,10 +32,11 @@ async def on_ready():
 
     await bot.change_presence(activity=discord.Game(name="type .info for info"))
     print("LeetCodeBot is ready.")
+    print("Save interval set to", SAVEINTERVAL, "seconds")
     print("Logged in as {0.user}".format(bot))
     print(discord.__version__)
     while True:
-        await asyncio.sleep(5)
+        await asyncio.sleep(SAVEINTERVAL)
         await save()
 
     
@@ -95,6 +97,7 @@ async def clear_topics(ctx):
     for person in classmates:
         if person.id == ctx.message.author.id:
             person.topics = []
+    await ctx.send("Topics cleared")
 
 @bot.command()
 async def remove_topics(ctx, *, in_text):
@@ -144,7 +147,7 @@ async def whos_leetcoding(ctx):
     members = ctx.message.guild.members
     for member in members:
         for activity in member.activities:
-            if activity.type == discord.ActivityType.custom and "leetcoding now" in activity.name and member not in currentlyLeetcoding:
+            if activity.type == discord.ActivityType.custom and "leetcoding now" in activity.name.casefold() and member not in currentlyLeetcoding: #casefold() allowes caseinsensitve match
                 currentlyLeetcoding.append(member.name)
         if len(currentlyLeetcoding) <= 0:
             await ctx.send("Noone is currently Leetcoding")
@@ -162,10 +165,10 @@ Commands include:
 .add_topics: Type topics you want to leetcode about if multiple use a comma and space seperator , 
 .remove_topics: Type topics you wish to remove from you list of topics
 .clear_topics: Clear your list of topics
-.my_topics: lists all of your topics
-.users_topics: lists all of a users topics either by name or by @ ping
-.shared_topics: find all users who share a topic with you.
-.find_topic: find all users with a particular topic```
+.my_topics: Lists all of your topics
+.users_topics: Lists all of a users topics either by name or by @ ping
+.shared_topics: Find all users who share a topic with you.
+.find_topic: Find all users with a particular topic```
     """
     await ctx.send(multiline)
               
