@@ -1,5 +1,5 @@
 # hunterleetcodebot
-Leetcodebot for the hunter discord server, made for the hunter CS discord hackathon.
+Leetcodebot for the hunter discord server, made for the hunter CS discord hackathon. Save interval can be changed in source.
 
 ### Dependencies 
 
