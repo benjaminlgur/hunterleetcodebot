@@ -2,6 +2,9 @@ import discord
 from discord.ext import commands
 import asyncio
 import Classmate
+import time
+import pickle
+from datetime import datetime
 
 #TOKEN = open("leetcodebottoken.txt", "rt")
 TOKEN = "TOKEN HERE"
@@ -9,18 +12,33 @@ TOKEN = "TOKEN HERE"
 
 bot = commands.Bot(command_prefix='.')
 
-classmates = []
+try:
+    classmates = pickle.load(open("save.p", "rb"))
+except:
+    classmates = []
+
+#Saving files
+async def save():
+    pickle.dump(classmates, open("save.p", "wb"))
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    print("Save Created at", current_time)
 
 
 
 @bot.event
 async def on_ready():
+
     await bot.change_presence(activity=discord.Game(name="type .info for info"))
     print("LeetCodeBot is ready.")
     print("Logged in as {0.user}".format(bot))
     print(discord.__version__)
-    
+    while True:
+        await asyncio.sleep(5)
+        await save()
 
+    
+#used for testing
 @bot.command()
 async def echo(ctx, *, message):
     await ctx.send(message)
